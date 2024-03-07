@@ -1,0 +1,16 @@
+return {
+    "vimwiki/vimwiki",
+    config = function()
+        -- 设置vimwiki的全局扩展为0
+        vim.g.vimwiki_global_ext = 0
+
+        -- 设置vimwiki列表
+        vim.g.vimwiki_list = {
+        {
+        path = '~/文档/技术历程/',
+        syntax = 'markdown',
+        ext = 'md',
+        },
+        }
+    end,
+}

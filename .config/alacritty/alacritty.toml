@@ -1,0 +1,49 @@
+import = ["/home/opeth/.config/alacritty/catppuccin-mocha.toml"]
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[font]
+size = 7
+
+[font.bold]
+family = "jetbrainsmono nerd font"
+style = "bold"
+
+[font.bold_italic]
+family = "jetbrainsmono nerd font"
+style = "bold italic"
+
+[font.italic]
+family = "jetbrainsmono nerd font"
+style = "italic"
+
+[font.normal]
+family = "jetbrainsmono nerd font"
+style = "regular"
+
+#[[keyboard.bindings]]
+#action = "spawnnewinstance"
+#key = "return"
+#mods = "super|shift"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[selection]
+save_to_clipboard = false
+
+[shell]
+program = "/usr/bin/zsh"
+
+[window]
+opacity = 0.6
+
+[window.class]
+general = "alacritty"
+instance = "alacritty"
+
+[window.padding]
+x = 10
+y = 10

@@ -1,0 +1,95 @@
+return {
+  "nvim-treesitter/nvim-treesitter-textobjects", -- 插件名称
+  lazy = true, 
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      textobjects = {
+        select = {
+          enable = true, -- 启用选择
+          lookahead = true, -- 自动跳转到下一个 textobj，类似于 targets.vim
+          keymaps = {
+            ["a="] = { query = "@assignment.outer", desc = "选择赋值语句的外部部分" },
+            ["i="] = { query = "@assignment.inner", desc = "选择赋值语句的内部部分" },
+            ["l="] = { query = "@assignment.lhs", desc = "选择赋值语句的左侧" },
+            ["r="] = { query = "@assignment.rhs", desc = "选择赋值语句的右侧" },
+            ["a:"] = { query = "@property.outer", desc = "选择对象属性的外部部分" },
+            ["i:"] = { query = "@property.inner", desc = "选择对象属性的内部部分" },
+            ["l:"] = { query = "@property.lhs", desc = "选择对象属性的左侧" },
+            ["r:"] = { query = "@property.rhs", desc = "选择对象属性的右侧" },
+            ["aa"] = { query = "@parameter.outer", desc = "选择参数/参数的外部部分" },
+            ["ia"] = { query = "@parameter.inner", desc = "选择参数/参数的内部部分" },
+            ["ai"] = { query = "@conditional.outer", desc = "选择条件语句的外部部分" },
+            ["ii"] = { query = "@conditional.inner", desc = "选择条件语句的内部部分" },
+            ["al"] = { query = "@loop.outer", desc = "选择循环语句的外部部分" },
+            ["il"] = { query = "@loop.inner", desc = "选择循环语句的内部部分" },
+            ["af"] = { query = "@call.outer", desc = "选择函数调用的外部部分" },
+            ["if"] = { query = "@call.inner", desc = "选择函数调用的内部部分" },
+            ["am"] = { query = "@function.outer", desc = "选择方法/函数定义的外部部分" },
+            ["im"] = { query = "@function.inner", desc = "选择方法/函数定义的内部部分" },
+            ["ac"] = { query = "@class.outer", desc = "选择类的外部部分" },
+            ["ic"] = { query = "@class.inner", desc = "选择类的内部部分" },
+          },
+        },
+        swap = {
+          enable = true,
+          swap_next = {
+            ["<leader>na"] = "@parameter.inner", -- 与下一个交换参数/参数
+            ["<leader>n:"] = "@property.outer", -- 与下一个交换对象属性
+            ["<leader>nm"] = "@function.outer", -- 与下一个交换函数
+          },
+          swap_previous = {
+            ["<leader>pa"] = "@parameter.inner", -- 与上一个交换参数/参数
+            ["<leader>p:"] = "@property.outer", -- 与上一个交换对象属性
+            ["<leader>pm"] = "@function.outer", -- 与上一个交换函数
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true, -- 是否设置跳转到 jumplist
+          goto_next_start = {
+            ["]f"] = { query = "@call.outer", desc = "下一个函数调用的开始" },
+            ["]m"] = { query = "@function.outer", desc = "下一个方法/函数定义的开始" },
+            ["]c"] = { query = "@class.outer", desc = "下一个类的开始" },
+            ["]i"] = { query = "@conditional.outer", desc = "下一个条件语句的开始" },
+            ["]l"] = { query = "@loop.outer", desc = "下一个循环语句的开始" },
+            ["]s"] = { query = "@scope", query_group = "locals", desc = "下一个作用域" },
+            ["]z"] = { query = "@fold", query_group = "folds", desc = "下一个折叠" },
+          },
+          goto_next_end = {
+            ["]F"] = { query = "@call.outer", desc = "下一个函数调用的结束" },
+            ["]M"] = { query = "@function.outer", desc = "下一个方法/函数定义的结束" },
+            ["]C"] = { query = "@class.outer", desc = "下一个类的结束" },
+            ["]I"] = { query = "@conditional.outer", desc = "下一个条件语句的结束" },
+            ["]L"] = { query = "@loop.outer", desc = "下一个循环语句的结束" },
+          },
+          goto_previous_start = {
+            ["[f"] = { query = "@call.outer", desc = "上一个函数调用的开始" },
+            ["[m"] = { query = "@function.outer", desc = "上一个方法/函数定义的开始" },
+            ["[c"] = { query = "@class.outer", desc = "上一个类的开始" },
+            ["[i"] = { query = "@conditional.outer", desc = "上一个条件语句的开始" },
+            ["[l"] = { query = "@loop.outer", desc = "上一个循环语句的开始" },
+          },
+          goto_previous_end = {
+            ["[F"] = { query = "@call.outer", desc = "上一个函数调用的结束" },
+            ["[M"] = { query = "@function.outer", desc = "上一个方法/函数定义的结束" },
+            ["[C"] = { query = "@class.outer", desc = "上一个类的结束" },
+            ["[I"] = { query = "@conditional.outer", desc = "上一个条件语句的结束" },
+            ["[L"] = { query = "@loop.outer", desc = "上一个循环语句的结束" },
+          },
+        },
+      },
+    })
+
+    local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
+
+    -- vim 方式: ; 移动到你之前移动的方向。
+    vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+    vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+
+    -- 可选地，使用 ; 和 , 使内建的 f、F、t、T 也支持重复操作
+    vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+    vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+    vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+    vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
+  end,
+}
